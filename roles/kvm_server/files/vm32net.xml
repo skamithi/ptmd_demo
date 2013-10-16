@@ -1,0 +1,4 @@
+<network>
+  <name>vm32net</name>
+  <bridge name="vm32net" />
+</network>

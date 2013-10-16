@@ -1,0 +1,4 @@
+<network>
+  <name>vm34net</name>
+  <bridge name="vm34net" />
+</network>

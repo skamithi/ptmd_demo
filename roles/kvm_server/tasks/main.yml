@@ -1,0 +1,55 @@
+- name: install pkgs required for kvm
+  apt: pkg=$item
+  with_items:
+    - qemu-kvm
+    - libvirt-bin
+    - python-vm-builder
+    - bridge-utils
+    - uml-utilities
+- name: create template folder for VMs
+  file: path={{ vmdir }} state=directory
+
+- name: put config file for vm in tmp directory
+  copy: src=vmbuilder.cfg dest=/tmp
+
+- name: put first time bootup script in tmp dir
+  copy: src=boot.sh dest=/tmp
+
+- name: delete any existing conflicting network definitions
+  file: path=/etc/libvirt/qemu/networks/{{item}}.xml state=absent
+  with_items: vmnets
+
+- name: delete any existing conflicting network definitions (part 2)
+  file: path=/etc/libvirt/qemu/networks/autostart/{{item}}.xml state=absent
+  with_items: vmnets
+
+- name: restart libvirt so it starts with clean config
+  service: name=libvirt-bin state=restarted
+
+- name: put network definition files in tmp directory
+  copy: src={{item}}.xml dest=/tmp/{{item}}.xml
+  with_items: vmnets
+
+- name: define vm networks
+  command: virsh net-define --file /tmp/{{item}}.xml
+  with_items: vmnets
+
+- name: autostart vm networks
+  command: virsh net-autostart {{item}}
+  with_items: vmnets
+
+- name: start vm networks
+  command: virsh net-start {{item}}
+  with_items: vmnets
+
+- name: create directories for vm1 - vm4
+  file: path={{vmdir}}/{{ item }} state=directory
+  with_items: vmnames
+
+#- name: create basevm
+#  command: vmbuilder kvm ubuntu --hostname=vm1 -c /etc/vmbuilder.cfg -d {{ vmdir }}
+
+
+#- name: copy base vm into 3 additional  vms
+#  command: virt-clone --connect=qemu:///system -f {{ vmdir }}/{{ item }}/newvm.gcow2 -o vm1 -n {{ item }}
+#  with_items: vmnames

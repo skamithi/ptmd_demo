@@ -1,0 +1,4 @@
+<network>
+  <name>vm12net</name>
+  <bridge name="vm12net" />
+</network>

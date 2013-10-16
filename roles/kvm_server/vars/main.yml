@@ -1,0 +1,5 @@
+---
+
+vmdir: '/var/lib/ptmdemo/images'
+vmnets: [mgmtnet, vm12net, vm23net, vm34net, vm41net]
+vm_names: [vm1, vm2, vm3, vm4]
