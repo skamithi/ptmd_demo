@@ -38,16 +38,16 @@
   command: virsh net-autostart {{item}}
   with_items: vmnets
 
-- name: start vm networks
-  command: virsh net-start {{item}}
-  with_items: vmnets
+- name: restart libvirt so networks start up
+  service: name=libvirt-bin state=restarted
+
 
 - name: create directories for vm1 - vm4
   file: path={{vmdir}}/{{ item }} state=directory
   with_items: vmnames
 
 #- name: create basevm
-#  command: vmbuilder kvm ubuntu --hostname=vm1 -c /etc/vmbuilder.cfg -d {{ vmdir }}
+#  command: vmbuilder kvm ubuntu --hostname=vm1 -c /tmp/vmbuilder.cfg -d {{ vmdir }}
 
 
 #- name: copy base vm into 3 additional  vms
