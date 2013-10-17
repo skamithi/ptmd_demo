@@ -6,29 +6,47 @@
     - python-vm-builder
     - bridge-utils
     - uml-utilities
-- name: create template folder for VMs
-  file: path={{ vmdir }} state=directory
-
 - name: put config file for vm in tmp directory
   copy: src=vmbuilder.cfg dest=/tmp
 
 - name: put first time bootup script in tmp dir
-  copy: src=boot.sh dest=/tmp
+  template: src=boot.sh.j2 dest=/tmp/boot.sh
 
-- name: delete any existing conflicting network definitions
-  file: path=/etc/libvirt/qemu/networks/{{item}}.xml state=absent
-  with_items: vmnets
+- name: stop all ptm demo vms
+  command: virsh shutdown {{ item }}
+  with_items: vmnames
+  ignore_errors: true
 
-- name: delete any existing conflicting network definitions (part 2)
-  file: path=/etc/libvirt/qemu/networks/autostart/{{item}}.xml state=absent
+- name: undefine all ptm demo vms
+  command: virsh undefine {{ item }}
+  with_items: vmnames
+  ignore_errors: true
+
+- name: destroy all networks used for ptm demo
+  command: virsh net-destroy {{ item }}
   with_items: vmnets
+  ignore_errors: true
+
+- name: undefine all networks used for ptm demo
+  command: virsh net-undefine {{ item }}
+  with_items: vmnets
+  ignore_errors: true
+
+- name: delete folder for storing vms
+  file: path={{ vmdir }} state=absent
 
 - name: restart libvirt so it starts with clean config
   service: name=libvirt-bin state=restarted
 
-- name: put network definition files in tmp directory
-  copy: src={{item}}.xml dest=/tmp/{{item}}.xml
-  with_items: vmnets
+- name: put network base vm net definition files in tmp directory
+  copy: src=basenet.xml dest=/tmp/basenet.xml
+
+- name: put network mgmt definition files in tmp directory
+  copy: src=mgmtnet.xml dest=/tmp/mgmtnet.xml
+
+- name: put network definition files for vm links
+  template: src=vmnet.xml.j2 dest=/tmp/{{item}.xml
+  with_items: vmnets_without_mgmt
 
 - name: define vm networks
   command: virsh net-define --file /tmp/{{item}}.xml
@@ -41,14 +59,18 @@
 - name: restart libvirt so networks start up
   service: name=libvirt-bin state=restarted
 
-
 - name: create directories for vm1 - vm4
   file: path={{vmdir}}/{{ item }} state=directory
   with_items: vmnames
 
-#- name: create basevm
-#  command: vmbuilder kvm ubuntu --hostname=vm1 -c /tmp/vmbuilder.cfg -d {{ vmdir }}
+- name: create base directory for storing vms
+  file: path={{ vmdir }} state=directory
 
+- name: create basevm
+  command: vmbuilder kvm ubuntu --hostname=vm1 -c /tmp/vmbuilder.cfg -d {{ vmdir }}/images/
+
+- name: start up basevm
+  command: virsh start vm1
 
 #- name: copy base vm into 3 additional  vms
 #  command: virt-clone --connect=qemu:///system -f {{ vmdir }}/{{ item }}/newvm.gcow2 -o vm1 -n {{ item }}

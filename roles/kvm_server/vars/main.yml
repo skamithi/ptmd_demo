@@ -1,5 +1,7 @@
 ---
 
-vmdir: '/var/lib/ptmdemo/images'
-vmnets: [mgmtnet, vm12net, vm23net, vm34net, vm41net]
-vm_names: [vm1, vm2, vm3, vm4]
+vmdir: '/var/lib/ptmdemo'
+vmnets_without_mgmt: [vm12net, vm23net, vm34net, vm41net]
+vmnets: [basenet, mgmtnet, vm12net, vm23net, vm34net, vm41net]
+vmnames: [vm1, vm2, vm3, vm4]
+libvirt_path: '/etc/libvirt/'

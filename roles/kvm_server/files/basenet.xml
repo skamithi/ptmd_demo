@@ -1,0 +1,10 @@
+<network>
+  <name>basenet</name>
+  <bridge name="basenet" />
+  <forward mode="nat" />
+  <ip address="10.100.1.1" netmask="255.255.255.248" >
+    <dhcp>
+      <range start='10.100.1.2' end='10.100.1.2' />
+    </dhcp>
+  </ip>
+</network>

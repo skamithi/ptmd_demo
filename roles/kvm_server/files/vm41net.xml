@@ -1,4 +1,0 @@
-<network>
-  <name>vm41net</name>
-  <bridge name="vm41net" />
-</network>

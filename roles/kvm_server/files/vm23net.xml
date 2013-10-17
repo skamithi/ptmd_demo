@@ -1,4 +1,0 @@
-<network>
-  <name>vm23net</name>
-  <bridge name="vm23net" />
-</network>
