@@ -1,0 +1,3 @@
+- name: install deb files for lldp
+  copy: src={{item}}.deb dest=/tmp/{{item.deb}
+  with_items:
