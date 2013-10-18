@@ -5,7 +5,14 @@
 apt-get update
 apt-get install -qqy --force-yes openssh-server
 
+## set locales
+# Getting error "perl warning setting locale failed"
+#
+locale-gen en_US en_US.UTF-8
+dpkg-reconfigure locales
+
+
 # install ssh authorized key from ansible host so root login is passwordless
 #
-mkdir ~/.ssh
-cat "{{ ansible_ssh_host_key_rsa_public }}" >> ~/.ssh/authorized_keys
+mkdir /root/.ssh >/dev/null 2>&1
+echo "$FILE(~/.ssh/id_rsa.pub)" > /root/.ssh/authorized_keys

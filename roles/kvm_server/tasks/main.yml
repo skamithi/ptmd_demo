@@ -12,6 +12,9 @@
 - name: put first time bootup script in tmp dir
   template: src=boot.sh.j2 dest=/tmp/boot.sh
 
+- name: copy ssh port checker script to tmp dir
+  copy: src=ssh_port_checker.sh dest=/tmp mode=750
+
 - name: stop all ptm demo vms
   command: virsh shutdown {{ item }}
   with_items: vmnames
@@ -45,7 +48,7 @@
   copy: src=mgmtnet.xml dest=/tmp/mgmtnet.xml
 
 - name: put network definition files for vm links
-  template: src=vmnet.xml.j2 dest=/tmp/{{item}.xml
+  template: src=vmnet.xml.j2 dest=/tmp/{{item}}.xml
   with_items: vmnets_without_mgmt
 
 - name: define vm networks
@@ -59,18 +62,22 @@
 - name: restart libvirt so networks start up
   service: name=libvirt-bin state=restarted
 
-- name: create directories for vm1 - vm4
-  file: path={{vmdir}}/{{ item }} state=directory
-  with_items: vmnames
-
 - name: create base directory for storing vms
-  file: path={{ vmdir }} state=directory
+  file: path={{ vmdir }}/images state=directory
 
 - name: create basevm
-  command: vmbuilder kvm ubuntu --hostname=vm1 -c /tmp/vmbuilder.cfg -d {{ vmdir }}/images/
+  command: vmbuilder kvm ubuntu --hostname=vm1 -c /tmp/vmbuilder.cfg -d {{ vmdir }}/images/vm1
 
 - name: start up basevm
   command: virsh start vm1
+  ignore_errors: true
+
+- name: check if ssh port is open. try a couple of times before failing
+  shell: /tmp/ssh_port_checker.sh 10.100.1.2
+  register: result
+
+- fail: msg="base vm (vm1) is not coming up. cannot connect via ssh"
+  when: result.stdout.find('disabled') == 0
 
 #- name: copy base vm into 3 additional  vms
 #  command: virt-clone --connect=qemu:///system -f {{ vmdir }}/{{ item }}/newvm.gcow2 -o vm1 -n {{ item }}
