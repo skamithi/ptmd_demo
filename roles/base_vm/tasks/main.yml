@@ -31,3 +31,13 @@
 
 - name: install ptm
   shell: /tmp/ptm_compile.sh
+
+- name: copy ptm startup script
+  copy: src=ptmd.conf dest=/etc/init
+
+- name: create ptmd service
+  file: src=/lib/init/upstart-job dest=/etc/init.d/ptmd state=link
+
+- name: add ptmd service to startup list
+  command: update-rc.d ptmd defaults
+
