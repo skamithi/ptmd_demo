@@ -1,15 +1,20 @@
 ---
-#- hosts: 127.0.0.1
-#  user: root
-#  roles:
-#    - role: kvm_server
+- hosts: 127.0.0.1
+  user: root
+  roles:
+    - role: kvm_server
 
 - hosts: ptmdemotmpl
   user: root
   roles:
     - role: base_vm
 
-#- hosts: ptmdemoservers
-#  user: root
-#  roles:
-#    - role: ptm_demo_vms
+- hosts: 127.0.0.1
+  user: root
+  roles:
+    - role: clone_vm
+
+- hosts: ptmdemoservers
+  user: root
+  roles:
+    - role: ptm_demo_vms

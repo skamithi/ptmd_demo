@@ -1,0 +1,77 @@
+- name: shutdown base vm
+  command: virsh shutdown vm1
+  ignore_errors: true
+
+- name: sleep for 10 seconds to let shutdown go through
+  command: sleep 10
+
+- name: create directories for remaining vms
+  file: path={{ vmdir }}/images/{{item}} state=directory
+  with_items: vmnames_without_basevm
+
+- name: copy base vm into 3 additional  vms
+  command: virt-clone --connect=qemu:///system -f {{ vmdir }}/images/{{ item }}/vm.gcow2 -o vm1 -n {{ item }} creates={{vmdir}}/images/{{item}}/vm.gcow2
+  with_items: vmnames_without_basevm
+
+- name: fix hostname and redo firstboot file for each cloned vm
+  command: virt-sysprep --enable hostname -v --hostname {{ item }} -d {{ item }} -c qemu:///system
+  with_items: vmnames_without_basevm
+
+## VM2 Networking changes
+- name: setup networking for vm2 - delete mgmt int
+  command: virsh detach-interface vm2 bridge --persistent
+
+- name: setup networking for vm2 - add mgmt int
+  command: virsh attach-interface vm2 bridge mgmtnet --persistent
+
+- name: setup networking for vm2 - add eth1
+  command: virsh attach-interface vm2 bridge vm12net --persistent
+
+- name: setup networking for vm2 - add eth2
+  command: virsh attach-interface vm2 bridge vm23net --persistent
+
+## VM3 Networking changes
+- name: setup networking for vm3 - delete mgmt int
+  command: virsh detach-interface vm3 bridge --persistent
+
+- name: setup networking for vm3 - add mgmt int
+  command: virsh attach-interface vm3 bridge mgmtnet --persistent
+
+- name: setup networking for vm3 - add eth1
+  command: virsh attach-interface vm3 bridge vm23net --persistent
+
+- name: setup networking for vm3 - add eth2
+  command: virsh attach-interface vm3 bridge vm34net --persistent
+
+##VM4 Networking changes
+- name: setup networking for vm4 - delete mgmt int
+  command: virsh detach-interface vm4 bridge --persistent
+
+- name: setup networking for vm4 - add mgmt int
+  command: virsh attach-interface vm4 bridge mgmtnet --persistent
+
+- name: setup networking for vm4 - add eth1
+  command: virsh attach-interface vm4 bridge vm34net --persistent
+
+- name: setup networking for vm4 - add eth2
+  command: virsh attach-interface vm4 bridge vm41net --persistent
+
+##VM1 Networking changes
+- name: setup networking for vm1 - add eth1
+  command: virsh attach-interface vm1 bridge vm12net --persistent
+
+- name: setup networking for vm1 - add eth2
+  command: virsh attach-interface vm1 bridge vm41net --persistent
+
+- name: start all vms
+  command: virsh start {{ item }}
+  with_items: vmnames
+
+## TODO use some kind of variable derived from /etc/ansible/host list
+- name: check that ssh is running on all vms before continuing
+  command: /tmp/ssh_port_checker.sh {{ item }}
+  with_items: [ 10.100.1.2,10.100.1.10, 10.100.1.11, 10.100.1.12 ]
+
+- name: sleep for a few seconds to let ssh start completely
+  pause: seconds=10
+

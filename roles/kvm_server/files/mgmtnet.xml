@@ -4,7 +4,7 @@
   <forward mode="nat" />
   <ip address="10.100.1.9" netmask="255.255.255.248" >
     <dhcp>
-      <range start='10.100.1.10' end='10.100.1.13' />
+      <range start='10.100.1.10' end='10.100.1.12' />
     </dhcp>
   </ip>
 </network>

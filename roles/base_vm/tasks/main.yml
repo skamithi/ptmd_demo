@@ -38,6 +38,11 @@
 - name: create ptmd service
   file: src=/lib/init/upstart-job dest=/etc/init.d/ptmd state=link
 
+- name: install ptmd defaults file
+  file: src=ptmd_defaults dest=/etc/default/ptmd
+
 - name: add ptmd service to startup list
   command: update-rc.d ptmd defaults
 
+- name: remove 127.0.1.1 line from /etc/hosts
+  lineinfile: dest=/etc/hosts regexp='127.0.1.1' state=absent

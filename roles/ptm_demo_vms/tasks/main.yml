@@ -1,0 +1,2 @@
+- name: 'configure eth1 and eth2'
+  template: src=interfaces dest=/etc/network/interfaces

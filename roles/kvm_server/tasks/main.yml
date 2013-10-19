@@ -6,6 +6,8 @@
     - python-vm-builder
     - bridge-utils
     - uml-utilities
+    - libguestfs-tools
+    - guestmount
 - name: put config file for vm in tmp directory
   copy: src=vmbuilder.cfg dest=/tmp
 
@@ -65,20 +67,16 @@
 - name: create base directory for storing vms
   file: path={{ vmdir }}/images state=directory
 
-- name: create basevm
-  command: vmbuilder kvm ubuntu --hostname=vm1 -c /tmp/vmbuilder.cfg -d {{ vmdir }}/images/vm1
+- name: create basevm..takes a while.take a 10 min coffee break
+  command: vmbuilder kvm ubuntu --hostname=vm1 -c /tmp/vmbuilder.cfg -d {{ vmdir }}/images/vm1 --rootsize 1024 --swapsize 256
 
 - name: start up basevm
   command: virsh start vm1
   ignore_errors: true
 
-- name: check if ssh port is open. try a couple of times before failing
+- name: wait until ssh port is open
   shell: /tmp/ssh_port_checker.sh 10.100.1.2
   register: result
 
-- fail: msg="base vm (vm1) is not coming up. cannot connect via ssh"
-  when: result.stdout.find('disabled') == 0
-
-#- name: copy base vm into 3 additional  vms
-#  command: virt-clone --connect=qemu:///system -f {{ vmdir }}/{{ item }}/newvm.gcow2 -o vm1 -n {{ item }}
-#  with_items: vmnames
+- name: sleep for a little bit (see if this helps)
+  pause: seconds=10
