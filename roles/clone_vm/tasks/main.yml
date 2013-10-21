@@ -3,7 +3,7 @@
   ignore_errors: true
 
 - name: sleep for 10 seconds to let shutdown go through
-  command: sleep 10
+  pause: seconds=10
 
 - name: create directories for remaining vms
   file: path={{ vmdir }}/images/{{item}} state=directory

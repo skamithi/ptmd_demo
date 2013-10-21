@@ -1,3 +1,7 @@
+- include: clean_out_server.yml
+
+- include: ../../../ptm_install.yml
+
 - name: install pkgs required for kvm
   apt: pkg=$item
   with_items:
@@ -8,6 +12,9 @@
     - uml-utilities
     - libguestfs-tools
     - guestmount
+    - gperf
+    - libpcre3-dev
+
 - name: put config file for vm in tmp directory
   copy: src=vmbuilder.cfg dest=/tmp
 
@@ -16,32 +23,6 @@
 
 - name: copy ssh port checker script to tmp dir
   copy: src=ssh_port_checker.sh dest=/tmp mode=750
-
-- name: stop all ptm demo vms
-  command: virsh shutdown {{ item }}
-  with_items: vmnames
-  ignore_errors: true
-
-- name: undefine all ptm demo vms
-  command: virsh undefine {{ item }}
-  with_items: vmnames
-  ignore_errors: true
-
-- name: destroy all networks used for ptm demo
-  command: virsh net-destroy {{ item }}
-  with_items: vmnets
-  ignore_errors: true
-
-- name: undefine all networks used for ptm demo
-  command: virsh net-undefine {{ item }}
-  with_items: vmnets
-  ignore_errors: true
-
-- name: delete folder for storing vms
-  file: path={{ vmdir }} state=absent
-
-- name: restart libvirt so it starts with clean config
-  service: name=libvirt-bin state=restarted
 
 - name: put network base vm net definition files in tmp directory
   copy: src=basenet.xml dest=/tmp/basenet.xml
@@ -76,7 +57,6 @@
 
 - name: wait until ssh port is open
   shell: /tmp/ssh_port_checker.sh 10.100.1.2
-  register: result
 
-- name: sleep for a little bit (see if this helps)
+- name: sleep for a little bit to allow ssh to startup
   pause: seconds=10

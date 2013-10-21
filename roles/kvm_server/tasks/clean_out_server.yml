@@ -1,0 +1,46 @@
+- name: uninstall lldp
+  apt: pkg=$item state=absent
+  with_items:
+    - lldp
+    - liblldpctl-dev
+  ignore_errors: true
+
+- name: remove installed ptm
+  file: path=$item state=absent
+  ignore_errors: true
+  with_items:
+    - /usr/sbin/ptmd
+    - /usr/sbin/ptmctl
+    - /usr/local/sbin/ptmd
+    - /usr/local/sbin/ptmctl
+
+- name: stop all ptm demo vms
+  command: virsh shutdown {{ item }}
+  with_items: vmnames
+  ignore_errors: true
+
+- name: undefine all ptm demo vms
+  command: virsh undefine {{ item }}
+  with_items: vmnames
+  ignore_errors: true
+
+- name: destroy all networks used for ptm demo
+  command: virsh net-destroy {{ item }}
+  with_items: vmnets
+  ignore_errors: true
+
+- name: undefine all networks used for ptm demo
+  command: virsh net-undefine {{ item }}
+  with_items: vmnets
+  ignore_errors: true
+
+- name: delete folder for storing vms
+  file: path={{ vmdir }} state=absent
+
+- name: delete ptm config folder on kvm host
+  file: path {{ ptmconfdir }} state=absent
+
+- name: restart libvirt so it starts with clean config
+  service: name=libvirt-bin state=restarted
+
+

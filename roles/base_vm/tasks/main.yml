@@ -1,48 +1,7 @@
-- name: install git
-  apt: pkg=git
+- include: ../../../ptm_install.yml
 
-- name: install build-essential pkgs
-  apt: pkg=build-essential
-
-- name: install compile dependencies for ptm
-  apt: pkg=libgraphviz-dev
-
-- name: copy deb files for lldp
-  copy: src={{item}}_amd64.deb dest=/tmp/{{item}}_amd64.deb
-  with_items:
-    - liblldpctl-dev_0.7.6-1
-    - lldpd_0.7.6-1
-
-- name: install deb files
-  command: dpkg -i /tmp/{{item}}_amd64.deb
-  with_items:
-    - lldpd_0.7.6-1
-    - liblldpctl-dev_0.7.6-1
-  ignore_errors: true
-
-- name: complete dpkg install by installing dependencies
-  command: apt-get install -f -y
-
-- name: grab latest ptm from git
-  git: repo=http://github.com/CumulusNetworks/ptm.git dest={{ptmbuilddir}}
-
-- name: copy install file to tmp
-  template: src=ptm_compile.sh.j2 dest=/tmp/ptm_compile.sh mode=755
-
-- name: install ptm
-  shell: /tmp/ptm_compile.sh
-
-- name: copy ptm startup script
-  copy: src=ptmd.conf dest=/etc/init
-
-- name: create ptmd service
-  file: src=/lib/init/upstart-job dest=/etc/init.d/ptmd state=link
-
-- name: install ptmd defaults file
-  file: src=ptmd_defaults dest=/etc/default/ptmd
-
-- name: add ptmd service to startup list
-  command: update-rc.d ptmd defaults
+- name: remove firstboot file
+  file: path=/root/firstboot_done state=absent
 
 - name: remove 127.0.1.1 line from /etc/hosts
   lineinfile: dest=/etc/hosts regexp='127.0.1.1' state=absent

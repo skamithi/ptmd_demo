@@ -1,3 +1,6 @@
 vmdir: '/var/lib/ptmdemo'
 vmnames: [vm1, vm2, vm3, vm4]
+ptmbuilddir: '/tmp/ptm'
+ptmconfdir: '/etc/cumulus/ptm.d/'
+
 
