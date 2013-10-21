@@ -38,7 +38,7 @@
   file: path={{ vmdir }} state=absent
 
 - name: delete ptm config folder on kvm host
-  file: path {{ ptmconfdir }} state=absent
+  file: path={{ ptmconfdir }} state=absent
 
 - name: restart libvirt so it starts with clean config
   service: name=libvirt-bin state=restarted

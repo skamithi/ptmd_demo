@@ -1,26 +1,43 @@
 PTM Demo
+========
+
+Ansible playbook to setup sandbox for me to test Cumulus Network's PTM Daemon.
 
 Topology
+--------
+* Logical Topology
+
+<pre>
+
+|------|     |--------|
+| VM1  |-----|  VM2   |
+|------|     |--------|
+   |            |
+   |            |
+   |            |
+|------|     |--------|
+| VM4  |-----|  VM3   |
+|------|     |--------|
+
+
+</pre>
 
 PreRequisites.
+--------------
 
-* Delete your ```$HOME/.ssh/known_hosts```. Clean this out so that there is no conflict
-  with host keys in case you have used IP addresses that match the ones used in
-this demo.
+* Requires Ubuntu 12.04 has KVM host
 
-* Add authorized_keys to root directory on Ansible host
-```
-# Generate SSH key if you have already
-> ssh-keygen
+Runs only on Ubuntu 12.04 for now. Switching to ```virt-builder``` from
+  ```vm-builder``` in next rework so I can test this on a debian desktop.
 
-#copy the key to ~root/authorized_keys
-> sudo cat .ssh/id_rsa.pub >> ~/root/.ssh/authorized_keys
+* 4GB disk space in /var/ and 1 GB RAM free
 
-```
+Todo
+----
 
-* Disk and Memory Requirements
-
-** 4GB disk free
-** 1GB RAM free
+Write Ruby on Rails app first using graphviz to render the topology and than
+after that leverage SVG, probably RaphaelJS and other libs. Web app will show
+live changes in the topology has ```if-topo-pass``` and ```if-topo-fail``` get
+activated.
 
 

@@ -2,7 +2,7 @@
 - hosts: 127.0.0.1
   user: root
   roles:
-    - role: kvm_server
+    - role: setup_kvm_server
 
 - hosts: ptmdemotmpl
   user: root
@@ -17,4 +17,29 @@
 - hosts: ptmdemoservers
   user: root
   roles:
-    - role: ptm_demo_vms
+    - role: setup_ptm_demo_vms
+
+- hosts: 127.0.0.1
+  user: root
+  vars:
+    create_topo_py: 'create_topology.py'
+  tasks:
+    - name: pause for a little while to let vms to boot up
+      pause: seconds=30
+    - name: place topology dot file creator in tmp directory
+      copy: src=files/{{create_topo_py}} dest=/tmp/{{create_topo_py}} mode=750
+    - name: run topology dot file creator
+      command: /tmp/{{create_topo_py}}
+    - name: copy topology dot file to ptm conf directory
+      copy: src=/tmp/dotfile dest={{ptmconfdir}}/topology.dot
+    - name: restart ptmd
+      service:  name=ptmd state=restarted
+
+- hosts: ptmdemoservers
+  user: root
+  tasks:
+    - name: copy topology dot file to ptm conf directory
+      copy: src={{ ptmconfdir }}/topology.dot dest={{ ptmconfdir}}/topology.dot
+    - name: restart ptmd
+      service: name=ptmd state=restarted
+
