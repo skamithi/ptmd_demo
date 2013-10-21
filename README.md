@@ -1,4 +1,4 @@
-PTM Demo
+PTMD Demo
 ========
 
 Ansible playbook to setup sandbox for me to test Cumulus Network's PTM Daemon.
@@ -95,14 +95,6 @@ vnet11 pass   vm4:eth2             vm4:eth2              1m:53s
 ```
 
 ptmctl output from VM1
-```
-digraph G {
-  graph [ hostidtype="hostname", version="1:0",date="10/21/2013"];
-    vm1:eth1 ->  vm2:eth1
-    vm1:eth2 ->  vm4:eth2
-    vm2:eth2 ->  vm3:eth2
-    vm3:eth1 ->  vm4:eth1
-}
 ```
 root@vm1:~# ptmctl
 ---------------------------------------------------------------------
