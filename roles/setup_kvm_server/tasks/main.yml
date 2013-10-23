@@ -13,6 +13,7 @@
     - gperf
     - libpcre3-dev
     - python-libvirt
+    - virtinst
 
 - name: put config file for vm in tmp directory
   copy: src=vmbuilder.cfg dest=/tmp
