@@ -42,5 +42,6 @@
 
 - name: restart libvirt so it starts with clean config
   service: name=libvirt-bin state=restarted
+  ignore_errors: true
 
 

@@ -1,10 +1,5 @@
 - include: clean_out_server.yml
 
-- include: ../../../ptm_install.yml
-
-- name: add qemu ppa. qemu support on ubuntu only at 1.0. need >= 1.4
-  apt_repository: repo="ppa:miurahr/vagrant" update_cache=yes
-
 - name: install pkgs required for kvm
   apt: pkg=$item
   with_items:
@@ -17,6 +12,7 @@
     - guestmount
     - gperf
     - libpcre3-dev
+    - python-libvirt
 
 - name: put config file for vm in tmp directory
   copy: src=vmbuilder.cfg dest=/tmp
