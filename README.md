@@ -7,6 +7,10 @@ Host. I would like the connections to be point-to-point but i'm still learning
 how to do that. right now all VM connections connect to bridges so LLDP messages goes
 between VM and KVM Host instead of VM -> VM.
 
+References
+----------
+[PTMD Presentation] [1]
+[PTMD Source Code] [2]
 Topology
 --------
 * Logical Topology (end goal)
@@ -131,4 +135,5 @@ after that leverage SVG, probably RaphaelJS and other libs. Web app will show
 live changes in the topology has ```if-topo-pass``` and ```if-topo-fail``` get
 activated.
 
-
+[1] http://indico.uknof.org.uk/getFile.py/access?contribId=8&resId=1&materialId=slides&confId=28
+[2] http://github.com/CumulusNetworks/ptm

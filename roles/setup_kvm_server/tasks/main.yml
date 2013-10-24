@@ -1,4 +1,3 @@
-- include: clean_out_server.yml
 
 - name: install pkgs required for kvm
   apt: pkg=$item
@@ -14,6 +13,9 @@
     - libpcre3-dev
     - python-libvirt
     - virtinst
+    - virt-viewer
+
+- include: clean_out_server.yml
 
 - name: put config file for vm in tmp directory
   copy: src=vmbuilder.cfg dest=/tmp
