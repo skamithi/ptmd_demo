@@ -14,6 +14,15 @@
     - python-libvirt
     - virtinst
     - virt-viewer
+    - libevent-2.0-5
+    - libxml2
+    - libsnmp15
+
+- name: run update-guestfs-appliance. dependency for running virt-sysprep
+  command: update-guestfs-appliance creates=/usr/lib/guestfs/supermin.d/base.img
+
+- name: change permission on linux kernels to 0644. dependency for libguestfs
+  file: path=/boot recurse=true mode=0644 state=directory
 
 - include: clean_out_server.yml
 

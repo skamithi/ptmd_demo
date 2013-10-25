@@ -1,0 +1,42 @@
+- name: install git
+  apt: pkg=git
+
+- name: install build-essential pkgs
+  apt: pkg=build-essential
+
+- name: install compile dependencies for ptm
+  apt: pkg=libgraphviz-dev
+
+- name: grab latest ptm from git
+  git: repo=http://github.com/CumulusNetworks/ptm.git dest={{ptmbuilddir}}
+
+- name: copy install file to tmp
+  template: src=ptm_compile.sh.j2 dest=/tmp/ptm_compile.sh mode=755
+
+- name: install ptm
+  shell: /tmp/ptm_compile.sh
+
+- name: copy ptm startup script
+  copy: src=ptmd.conf dest=/etc/init
+
+- name: create ptm config dir
+  file: path={{ptmconfdir}} state=directory
+
+- name: copy topo-fail and topo-pass scripts
+  copy: src={{item}}  dest={{ptmconfdir}}/{{item}}
+  with_items:
+    - if-topo-pass
+    - if-topo-fail
+
+- name: copy topology.dot file to vm
+  copy: src=topology.dot dest={{ptmconfdir}}/topology.dot
+
+- name: create ptmd service
+  file: src=/lib/init/upstart-job dest=/etc/init.d/ptmd state=link
+
+- name: install ptmd defaults file
+  copy: src=ptmd_defaults dest=/etc/default/ptmd
+
+- name: add ptmd service to startup list
+  command: update-rc.d ptmd defaults
+

@@ -1,0 +1,17 @@
+- name: copy deb files for lldp
+  copy: src="files/{{item}}_amd64.deb" dest="/tmp/{{item}}_amd64.deb"
+  with_items:
+    - liblldpctl-dev_0.7.6-1
+    - lldpd_0.7.6-1
+
+- name: install lldp
+  command: dpkg -i /tmp/{{item}}_amd64.deb
+  with_items:
+    - lldpd_0.7.6-1
+    - liblldpctl-dev_0.7.6-1
+  ignore_errors: true
+
+- name:  complete dpkg install by installing dependencies
+  command: 'apt-get install -f -y'
+
+

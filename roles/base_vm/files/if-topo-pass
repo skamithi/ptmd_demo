@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo " `date`: LINK WENT UP: $1" >> /tmp/ptm_script_output.txt

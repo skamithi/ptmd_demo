@@ -3,3 +3,19 @@
 vmnets_without_mgmt: [vm12net, vm23net, vm34net, vm41net]
 vmnets: [basenet, mgmtnet, vm12net, vm23net, vm34net, vm41net]
 libvirt_path: '/etc/libvirt/'
+qemu_deb_extension: '1.4.0+dfsg-1expubuntu4_amd64.deb'
+qemu_pkg_list:
+    - qemu-utils
+    - qemu-kvm
+    - qemu-system-x86
+    - qemu
+    - qemu-system
+    - qemu-user
+    - qemu-system-ppc
+    - qemu-system-sparc
+    - qemu-system-mips
+    - qemu-system-arm
+    - qemu-system-misc
+
+
+

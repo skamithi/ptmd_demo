@@ -1,0 +1,4 @@
+- name: complete dpkg install by installing dependencies
+  command: apt-get install -f -y
+
+

@@ -1,3 +1,5 @@
+- include: ../../../lldp_install.yml
+
 - name: shutdown base vm
   command: virsh shutdown vm1
   ignore_errors: true
@@ -66,12 +68,11 @@
 - name: start all vms
   command: virsh start {{ item }}
   with_items: vmnames
+  ignore_errors: true
 
 ## TODO use some kind of variable derived from /etc/ansible/host list
 - name: check that ssh is running on all vms before continuing
   command: /tmp/ssh_port_checker.sh {{ item }}
   with_items: [ 10.100.1.2,10.100.1.10, 10.100.1.11, 10.100.1.12 ]
 
-- name: sleep for a few seconds to let ssh start completely
-  pause: seconds=10
 
