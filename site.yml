@@ -41,10 +41,10 @@
       command: virsh shutdown {{ item }}
       with_items: vmnames
 
-    - name: sleep for a few seconds to let vms shutdown
-      pause: seconds=10
+#    - name: sleep for a few seconds to let vms shutdown
+#      pause: seconds=10
 
-    - name: bring up ptm demo vms using custom script
-      command: /tmp/{{item}}_startup.sh
-      with_items: vmnames
+#    - name: bring up ptm demo vms using custom script
+#      command: /tmp/{{item}}_startup.sh
+#      with_items: vmnames
 
