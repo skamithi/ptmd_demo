@@ -57,8 +57,10 @@ def geteth(qemuxml, vm2vnet, vm_name):
       listening_vm = re.search('^(vm\d{1})', bridge).group(0)
       port_number = '504' + re.search('\d+', bridge).group(0)
       netstr += '-netdev socket,id=host' + hostnet  + ','
-      if listening_vm == vm_name:
-        netstr += 'listen=:' + port_number + ' '
+      if (vm_name == 'vm4'):
+        netstr += 'connect=127.0.0.1:' + port_number + ' '
+      elif (listening_vm == vm_name) or (vm_name == 'vm1'):
+        netstr += 'listen=127.0.0.1:' + port_number + ' '
       else:
         netstr += 'connect=127.0.0.1:' + port_number + ' '
       netstr += '-device rtl8139,'
@@ -117,7 +119,8 @@ for vm_name in vm_names:
   uuidstr = qemuxml.findtext('uuid')
   diskloc = qemuxml.find('devices/disk/source').attrib['file']
 
-  startupstr = '/usr/bin/kvm' + ' ' + ' '.join(default_values) + \
+  startupstr = '/usr/bin/qemu-system-x86_64' + ' ' + ' '.join(default_values) + \
+      ' -uuid ' + uuidstr + \
       ' ' + '-name ' + vm_name + ' -vnc 127.0.0.1:' + \
       re.search('vm(\d{1})', vm_name).group(1) + ' ' + \
     getdiskstr(qemuxml) + getchardev(vm_name) + \
