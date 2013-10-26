@@ -90,6 +90,22 @@ digraph G {
 }
 ```
 
+ptmctl output
+------------
+
+Example ptmctl output from vm1
+
+```
+root@vm1:~# ptmctl
+---------------------------------------------------------------------
+Port   Status Expected Nbr         Observed Nbr         Last Updated
+---------------------------------------------------------------------
+eth1   pass   vm2:eth1             vm2:eth1              4m:25s   
+eth2   pass   vm4:eth2             vm4:eth2              4m:25s  
+```
+
+
+
 Todo
 ----
 
