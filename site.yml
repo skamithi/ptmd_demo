@@ -23,8 +23,21 @@
 - hosts: 127.0.0.1
   user: root
   vars:
-    create_topo_py: 'create_topology.py'
+    dnsmasqdir: '/var/lib/libvirt/dnsmasq'
   tasks:
+    - name: get ptmdemo vm mgmt ip to host entry
+      shell: grep {{item.name }} {{dnsmasqdir}}/{{ item.bridge }}.leases | awk '{print $3 , "  ", $4}'
+      register: hostmapping
+      with_items:
+        - { name: 'vm1', bridge: 'basenet' }
+        - { name: 'vm2', bridge: 'mgmtnet' }
+        - { name: 'vm3', bridge: 'mgmtnet' }
+        - { name: 'vm4', bridge: 'mgmtnet' }
+
+    - name: add vm mgmt ip to host to hosts table on kvm host
+      lineinfile: dest=/etc/hosts regexp="{{item.item.name}}\s+$" line="{{item.stdout}}"
+      with_items: hostmapping.results
+
     - name: copy lldp checker to kvm host
       copy: src=files/lldp_checker.sh dest=/tmp mode=750
 

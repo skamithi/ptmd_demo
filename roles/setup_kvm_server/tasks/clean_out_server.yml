@@ -1,3 +1,7 @@
+- name: stop any custom kvm processes
+  command: pkill qemu
+  ignore_errors: true
+
 - name: uninstall lldp
   apt: pkg=$item state=absent
   with_items:
