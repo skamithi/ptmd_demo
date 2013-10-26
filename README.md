@@ -69,7 +69,8 @@ VMs must be started manually until I figure out how to get ansible to start a cu
 # sudo /tmp/vm4.startup.sh
 ```
 
-Log into the hosts using hostnames from ```vm1``` to ```vm4```
+Log into the hosts using hostnames from ```vm1``` to ```vm4```. Root account has public ssh key of the user you ran the ```ansible-playbook``` command from.
+
 ```
 # ssh root@vm1
 ```
