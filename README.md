@@ -13,7 +13,7 @@ References
 
 Topology
 --------
-* Logical Topology (end goal)
+* Logical Topology
 
 <pre>
 
