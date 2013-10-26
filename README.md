@@ -3,9 +3,7 @@ PTMD Demo
 
 Ansible playbook to setup sandbox for me to test Cumulus Network's PTM Daemon.
 Creates 4 VMs with 2 NICs. Attaches the 2 NICs to bridges configured on the KVM
-Host. I would like the connections to be point-to-point but i'm still learning
-how to do that. right now all VM connections connect to bridges so LLDP messages goes
-between VM and KVM Host instead of VM -> VM.
+Host. 
 
 References
 ----------
