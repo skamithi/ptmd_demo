@@ -1,3 +1,7 @@
+
+- fail: msg="Only works when KVM Host is Ubuntu 12.04"
+  when: "'{{ ansible_distribution }} {{ ansible_distribution_version }}' != 'Ubuntu 12.04'"
+
 - name: load ppa for qemu 1.4
   apt_repository: repo="ppa:miurahr/vagrant" update_cache=yes
 
