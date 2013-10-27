@@ -1,5 +1,4 @@
 ---
-
 vmnets_without_mgmt: [vm12net, vm23net, vm34net, vm41net]
 vmnets: [basenet, mgmtnet, vm12net, vm23net, vm34net, vm41net]
 libvirt_path: '/etc/libvirt/'
