@@ -111,7 +111,7 @@ Todo
 ~~Fix QEMU netdev issue so I get point to point connections between VMs. A must
 for LLDP to flow between VMs~~
 
-Add entry to /etc/hosts file for KVM server for each VM created
+~~Add entry to /etc/hosts file for KVM server for each VM created~~
 
 Write Ruby on Rails app first using graphviz to render the topology and than
 after that leverage SVG, probably RaphaelJS and other libs. Web app will show
