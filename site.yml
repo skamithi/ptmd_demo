@@ -35,7 +35,7 @@
         - { name: 'vm4', bridge: 'mgmtnet' }
 
     - name: add vm mgmt ip to host to hosts table on kvm host
-      lineinfile: dest=/etc/hosts regexp="{{item.item.name}}\s+$" line="{{item.stdout}}"
+      lineinfile: dest=/etc/hosts regexp="\s+{{item.item.name}}" line="{{item.stdout}}"
       with_items: hostmapping.results
 
     - name: copy lldp checker to kvm host
