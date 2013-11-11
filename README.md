@@ -37,9 +37,9 @@ PreRequisites.
 * Requires Ubuntu 12.04 has KVM host
 
 Runs only on Ubuntu 12.04 for now. Switching to ```virt-builder``` from
-  ```vm-builder``` in next rework so I can test this on a debian desktop.
+  ```vm-builder``` in next rework so I can test this on a debian/centos desktop.
 
-* 4GB disk space in /var/ and 1 GB RAM free
+* 4GB disk space in /var/ and 1 GB RAM freecen
 
 Running it
 ----------
